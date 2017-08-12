@@ -21,6 +21,7 @@ ES6-compatible Node.js
 
 # Supported Trackers
 * HDSky
+* CHDBits
 * M-Team
 
 All Trackers using NexusPHP can be adapted very easily.
