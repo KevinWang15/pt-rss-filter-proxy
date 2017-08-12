@@ -36,7 +36,7 @@ fs.readdirSync(normalizedPath).forEach(function (file) {
 // =======================================
 app.get('/*', function (req, res) {
     // Find domain data associated with URL
-    let url = req.url.substr(2);
+    let url = decodeURIComponent(req.url.substr(1));
     let match = url.match(/https?:\/\/(.+)\//m);
     if (match !== null) {
         let domain = match[1];
