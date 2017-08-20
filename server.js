@@ -61,6 +61,12 @@ let whiteListedUrl = [];
 function FilterRss(url, domainData) {
     return new Promise((res) => {
         request(url, function (error, response, body) {
+            if (error) {
+                console.warn("Fetching " + url + " has failed, " + JSON.stringify(error));
+                res("");
+                return;
+            }
+
             // the following commented line is for testing
             // let body = fs.readFileSync("test.xml", { encoding: "UTF8" });
 
@@ -116,6 +122,8 @@ function FilterRss(url, domainData) {
                                                 // blacklist the url
                                                 blackListedUrl.push(checkUrl);
                                             }
+                                        } else {
+                                            console.warn("Fetching " + checkUrl + " has failed, " + JSON.stringify(error));
                                         }
                                         // notify the queue to move on
                                         queue_res();
