@@ -9,7 +9,7 @@ let subElement = et.SubElement;
 let app = express();
 
 let Queue = require('promise-queue');
-let maxConcurrentCheck = 8;
+let maxConcurrentCheck = config.maxConcurrentCheck || 8;
 let queue = new Queue(maxConcurrentCheck);
 
 // Trackers & Config Loader
