@@ -1,6 +1,6 @@
-# pt-rss-freeleech-filter-proxy
+# pt-rss-filter-proxy
 
-A proxy that filters out all freeleech torrents from PT rss feeds.
+A proxy to filter PT rss feeds according to file size / freeleech or not.
 
 Meant to be used in conjunction with a seedbox to build up ratio.
 
