@@ -105,13 +105,13 @@ function FilterRss(url, domainData) {
                                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
                                         },
                                     }, function (error, response, body) {
-                                        // Got response body now, check if it's freeleech
-                                        if (body.match(new RegExp(domainData.regex_check_page_freeleech_test))) {
-                                            // it's freeleech! append <item> to filtered rss
+                                        // Got response body now, check if it should be kept
+                                        if (shouldKeep(body, domainData)) {
+                                            // should be kept! append <item> to filtered rss
                                             channel.append(child);
                                             whiteListedUrl.push(checkUrl);
                                         } else {
-                                            // it's not freeleech, if no error, blacklist the url
+                                            // if no error, blacklist the url
                                             if (!error) {
                                                 blackListedUrl.push(checkUrl);
                                             }
@@ -134,4 +134,42 @@ function FilterRss(url, domainData) {
             })
         });
     });
+}
+
+function shouldKeep(htmlBody, domainData) {
+    if (domainData.onlyWhenFreeLeech && !htmlBody.match(new RegExp(domainData.regex_check_page_freeleech_test)))
+        return false;
+
+    if (domainData.onlyWhenFileSizeInMBLessThan) {
+        let match = htmlBody.match(new RegExp(domainData.regex_size_field));
+        if (match !== null) {
+            let size = match[1];
+            if (parseSize(size) > domainData.onlyWhenFileSizeInMBLessThan)
+                return false;
+        } else {
+            // No size field found
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function parseSize(text) {
+    // strip irrelevant characters
+    let strippedText = text.replace(/[,\s]/g, '').toLowerCase();
+    // ensure ends with "b"
+    if (strippedText.substring(strippedText.length - 1) !== 'b')
+        strippedText += 'b';
+
+    let value = strippedText.substring(0, strippedText.length - 2);
+    let unit = strippedText.substring(strippedText.length - 2);
+    switch (unit) {
+        case 'kb':
+            return value / 1024;
+        case 'mb':
+            return value;
+        case 'gb':
+            return value * 1024;
+    }
 }
