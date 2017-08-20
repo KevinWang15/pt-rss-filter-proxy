@@ -106,14 +106,14 @@ function FilterRss(url, domainData) {
                                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
                                         },
                                     }, function (error, response, body) {
-                                        // Got response body now, check if it should be kept
-                                        if (shouldKeep(body, domainData)) {
-                                            // should be kept! append <item> to filtered rss
-                                            channel.append(child);
-                                            whiteListedUrl.push(checkUrl);
-                                        } else {
-                                            // if no error, blacklist the url
-                                            if (!error) {
+                                        if (!error) {
+                                            // Got response body now, check if it should be kept
+                                            if (shouldKeep(body, domainData)) {
+                                                // should be kept! append <item> to filtered rss
+                                                channel.append(child);
+                                                whiteListedUrl.push(checkUrl);
+                                            } else {
+                                                // blacklist the url
                                                 blackListedUrl.push(checkUrl);
                                             }
                                         }
