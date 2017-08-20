@@ -1,5 +1,6 @@
 let express = require('express');
-let request = require('request');
+let config = require('./config');
+let request = require('request').defaults({ 'proxy': config.proxy || null });
 let fs = require('fs');
 let et = require('elementtree');
 let ElementTree = et.ElementTree;
@@ -49,7 +50,7 @@ app.get('/*', function (req, res) {
         res.end("Invalid URL");
     }
 });
-app.listen(3355);
+app.listen(config.port || 3355);
 
 // Get and Filter RSS Feed
 // =======================================
