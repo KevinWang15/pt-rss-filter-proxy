@@ -155,6 +155,9 @@ function shouldKeep(htmlBody, domainData) {
     if (domainData.onlyWhenFreeLeech && !htmlBody.match(new RegExp(domainData.regex_check_page_freeleech_test)))
         return false;
 
+    if (domainData.onlyWhenNotHr && htmlBody.match(new RegExp(domainData.regex_check_page_hr_test)))
+        return false;
+
     if (domainData.onlyWhenFileSizeInMBLessThan) {
         let match = htmlBody.match(new RegExp(domainData.regex_size_field));
         if (match !== null) {

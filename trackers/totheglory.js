@@ -13,5 +13,6 @@ module.exports = {
         }
     },
     regex_check_page_freeleech_test: "/pic/ico_free\\.gif",
+    regex_check_page_hr_test: "/pic/hit_run\\.gif",
     regex_size_field: "尺寸.+?>([\\d.]+\\s*[GMK]B)",
 };
