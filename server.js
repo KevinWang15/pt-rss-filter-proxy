@@ -91,7 +91,13 @@ function FilterRss(url, domainData) {
                     // find url for the detail page
                     let checkUrlMatch = stringified.match(new RegExp(domainData.regex_check_page));
                     if (checkUrlMatch !== null) {
-                        let checkUrl = checkUrlMatch[0];
+                        let checkUrl;
+                        if (domainData.regex_check_page_transformer) {
+                            checkUrl = domainData.regex_check_page_transformer(checkUrlMatch);
+                            if (!checkUrl) return;
+                        } else {
+                            checkUrl = checkUrlMatch[0];
+                        }
                         // check for cached results
                         if (blackListedUrl.indexOf(checkUrl) >= 0) return;
                         if (whiteListedUrl.indexOf(checkUrl) >= 0) {
