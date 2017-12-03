@@ -89,6 +89,7 @@ function FilterRss(url, domainData) {
             let oldChannel = old.find('./channel');
             // copy root to new rss feed
             let channel = subElement(root, oldChannel.tag, oldChannel.attrib);
+            let progress = {total: 0, finished: 0};
 
             let checkingPromises = [];
             (oldChannel.findall("./*")).forEach(child => {
@@ -116,6 +117,7 @@ function FilterRss(url, domainData) {
                             return;
                         }
                         // if not cached, fetch the page and see..
+                        progress.total++;
                         checkingPromises.push(new Promise((check_res) => {
                             // using a promise queue so that only [maxConcurrentCheck] (=8) fetches are being made at the same time
                             queue.add(() => {
@@ -145,6 +147,8 @@ function FilterRss(url, domainData) {
                                         } else {
                                             console.warn("Fetching " + checkUrl + " has failed, " + JSON.stringify(error));
                                         }
+                                        progress.finished++;
+                                        console.log("Progress: " + progress.finished + "/" + progress.total);
                                         // notify the queue to move on
                                         queue_res();
                                         // mark this checking as finished
