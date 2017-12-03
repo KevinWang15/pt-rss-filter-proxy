@@ -11,6 +11,7 @@ let app = express();
 
 let Queue = require('promise-queue');
 let maxConcurrentCheck = config.maxConcurrentCheck || 8;
+let userAgent = config.userAgent || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36";
 let queue = new Queue(maxConcurrentCheck);
 
 // Trackers & Config Loader
@@ -66,6 +67,9 @@ function FilterRss(url, domainData) {
             url,
             proxy: config.proxy || null,
             followAllRedirects: true,
+            headers: {
+                'User-Agent': userAgent,
+            },
             method: "GET",
         }, function (error, response, body) {
             if (error) {
@@ -123,7 +127,7 @@ function FilterRss(url, domainData) {
                                         headers: {
                                             'Cookie': domainData.cookie,
                                             'Upgrade-Insecure-Requests': 1,
-                                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
+                                            'User-Agent': userAgent,
                                         },
                                         followAllRedirects: true,
                                         method: "GET",
