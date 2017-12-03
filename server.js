@@ -1,6 +1,7 @@
 let express = require('express');
 let config = require('./config');
-let request = require('request').defaults({ 'proxy': config.proxy || null });
+let request = require('request');
+let cloudscraperRequest = require('cloudscraper').request;
 let fs = require('fs');
 let et = require('elementtree');
 let ElementTree = et.ElementTree;
@@ -60,7 +61,13 @@ let whiteListedUrl = [];
 
 function FilterRss(url, domainData) {
     return new Promise((res) => {
-        request(url, function (error, response, body) {
+        let _request = domainData.cloudFlareBypass ? cloudscraperRequest : request;
+        _request({
+            url,
+            proxy: config.proxy || null,
+            followAllRedirects: true,
+            method: "GET",
+        }, function (error, response, body) {
             if (error) {
                 console.warn("Fetching " + url + " has failed, " + JSON.stringify(error));
                 res("");
@@ -110,13 +117,16 @@ function FilterRss(url, domainData) {
                             queue.add(() => {
                                 return new Promise((queue_res) => {
                                     // console.log("Requesting", checkUrl, "with", domainData.cookie);
-                                    request({
+                                    _request({
                                         url: checkUrl,
+                                        proxy: config.proxy || null,
                                         headers: {
                                             'Cookie': domainData.cookie,
                                             'Upgrade-Insecure-Requests': 1,
                                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
                                         },
+                                        followAllRedirects: true,
+                                        method: "GET",
                                     }, function (error, response, body) {
                                         if (!error) {
                                             // Got response body now, check if it should be kept
@@ -191,3 +201,7 @@ function parseSize(text) {
             return value * 1024;
     }
 }
+
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+});

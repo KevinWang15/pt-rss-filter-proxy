@@ -10,4 +10,5 @@ module.exports = {
     // in MB, only show torrents with size less than 5000MB (0 for unlimited)
     onlyWhenFileSizeInMBLessThan: 5000,
 
+    cloudFlareBypass: true
 };
