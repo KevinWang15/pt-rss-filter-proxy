@@ -23,6 +23,10 @@ ES6-compatible Node.js
 * HDSky
 * CHDBits
 * M-Team
+* empornium
+- totheglory
+- HDChina
+- Ourbits
 
 All Trackers using NexusPHP can be adapted very easily.
 
