@@ -2,3 +2,6 @@
 /.idea
 /test.xml
 /node_modules
+*.log
+package-lock.json
+config.js

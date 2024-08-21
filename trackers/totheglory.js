@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     domain: "totheglory.im",
     regex_check_page: "rssdd\\.php\\?par=([a-zA-Z0-9+/=]+)",
     regex_check_page_transformer: function (match) {

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     cookie: "sid=...; torrentDetailsState=...; cid=...; tagsort=...",
 
     // only show freeleech torrents
