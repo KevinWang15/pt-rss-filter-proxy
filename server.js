@@ -50,7 +50,6 @@ const axiosInstance = axios.create({
 // =======================================
 const domainData = config.domainData || {};
 
-
 const trackerData = {};
 
 // Tracker Loader
@@ -90,7 +89,7 @@ app.listen(port, function () {
 // Get and Filter RSS Feed
 // =======================================
 // used for caching results
-const blackListedUrl = [];
+const blackListedUrl = new Map();
 const whiteListedUrl = [];
 
 async function FilterRss(domain, url) {
@@ -138,7 +137,7 @@ async function FilterRss(domain, url) {
                     checkUrl = checkUrlMatch[0];
                 }
                 // check for cached results
-                if (blackListedUrl.indexOf(checkUrl) >= 0) {
+                if (blackListedUrl.has(checkUrl)) {
                     logger.debug(`Skipping blacklisted URL: ${checkUrl}`);
                     return;
                 }
@@ -164,7 +163,11 @@ async function FilterRss(domain, url) {
                             whiteListedUrl.push(checkUrl);
                         } else {
                             logger.info(`Blacklisting URL: ${checkUrl}`);
-                            blackListedUrl.push(checkUrl);
+                            blackListedUrl.set(checkUrl, Date.now());
+                            setTimeout(() => {
+                                blackListedUrl.delete(checkUrl);
+                                logger.info(`Removed ${checkUrl} from blacklist for retry`);
+                            }, Math.floor(Math.random() * (30 - 10 + 1) + 10) * 60 * 1000);
                         }
                     } catch (error) {
                         logger.error(`Error fetching ${checkUrl}: ${error.message}`);
