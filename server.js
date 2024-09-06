@@ -116,6 +116,16 @@ async function FilterRss(domain, url) {
 
         channel.find('item').each((_, item) => {
             const $item = $(item).clone();
+
+            // Remove namespaced elements, they are usually not needed and will likely cause parser errors
+            $item.find('*').each((_, el) => {
+                const tagName = el.tagName;
+                if (tagName.includes(':')) {
+                    $(el).remove();
+                }
+            });
+
+
             const enclosure = ($item?.find('enclosure') || [])[0];
             if (enclosure) {
                 const dlUrl = enclosure?.attribs?.url;
